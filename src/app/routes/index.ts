@@ -19,7 +19,7 @@ router.use("/admins", AdminRoutes)
 router.use("/schedules", scheduleRoutes)
 router.use("/doctor-schedules", DoctorScheduleRoutes)
 router.use("/appointments", AppointmentRoutes)
-router.use("/api/v1/rag", ragRouter);
+router.use("/rag", ragRouter);
 
 
 export const IndexRoutes = router;

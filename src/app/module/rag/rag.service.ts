@@ -3,7 +3,16 @@ import { prisma } from "../../lib/prisma";
 import { envVars } from "../../config/env";
 
 const queryRagFromDB = async (query: string) => {
-    // ১. ডাটাবেস থেকে সব ডাক্তারের তথ্য নিয়ে আসা
+
+
+        const genAI = new GoogleGenerativeAI(envVars.GEMINI_API_KEY as string);
+    
+    // আপনার API Key এর জন্য উপলব্ধ মডেলগুলো চেক করা হচ্ছে
+    const models = await genAI.;
+    console.log("Available Models:", models);
+    
+    // const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    
     const doctors = await prisma.doctor.findMany({
         include: {
             specialties: {
@@ -12,15 +21,15 @@ const queryRagFromDB = async (query: string) => {
         }
     });
 
-    // ২. ডাক্তারদের তথ্য AI এর বোঝার মতো টেক্সট করে ফেলা
+  
     const doctorContext = doctors.map(doc => {
         const specs = doc.specialties.map(s => s.specialty.title).join(", ");
         return `Name: ${doc.name}, Specialty: ${specs || "General"}, Fee: ${doc.appointmentFee}, Experience: ${doc.experience} years, Qualification: ${doc.qualification}`;
     }).join("\n");
 
-    // ৩. Gemini AI কল করা
-    const genAI = new GoogleGenerativeAI(envVars.GEMINI_API_KEY as string);
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+   
+    
+    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
 
     const prompt = `
         You are a helpful healthcare assistant. 
