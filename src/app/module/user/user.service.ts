@@ -46,14 +46,7 @@ const createDoctor = async (payload: ICreateDoctorPayload) => {
     })
 
 
-    await prisma.user.update({
-        where: {
-            id: userData.user.id
-        },
-        data: {
-            emailVerified: true
-        }
-    });
+ 
 
 
     try {
