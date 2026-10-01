@@ -46,6 +46,16 @@ const createDoctor = async (payload: ICreateDoctorPayload) => {
     })
 
 
+    await prisma.user.update({
+        where: {
+            id: userData.user.id
+        },
+        data: {
+            emailVerified: true
+        }
+    });
+
+
     try {
         const result = await prisma.$transaction(async (tx) => {
             const doctorData = await tx.doctor.create({
