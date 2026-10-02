@@ -194,7 +194,54 @@ const deleteDoctor = async (id: string) => {
     return { message: "Doctor deleted successfully" };
 }
 
+
+
+const getMyProfile = async (userId: string) => {
+    const doctor = await prisma.doctor.findFirst({
+        where: { userId },
+        include: {
+            specialties: { include: { specialty: true } }
+        }
+    });
+    if (!doctor) throw new AppError(status.NOT_FOUND, "Doctor profile not found");
+    return doctor;
+};
+
+const getMyAppointments = async (userId: string) => {
+    const doctor = await prisma.doctor.findFirst({ where: { userId } });
+    if (!doctor) throw new AppError(status.NOT_FOUND, "Doctor profile not found");
+    
+    const appointments = await prisma.appointment.findMany({
+        where: { doctorId: doctor.id },
+        include: {
+            patient: true,
+            schedule: true,
+        },
+        orderBy: { createdAt: 'desc' }
+    });
+    return appointments;
+};
+
+const getMySchedules = async (userId: string) => {
+    const doctor = await prisma.doctor.findFirst({ where: { userId } });
+    if (!doctor) throw new AppError(status.NOT_FOUND, "Doctor profile not found");
+
+    const schedules = await prisma.doctorSchedules.findMany({
+        where: { doctorId: doctor.id },
+        include: {
+            schedule: true
+        },
+        orderBy: { createdAt: 'desc' }
+    });
+    return schedules;
+};
+
+
+
 export const DoctorService = {
+    getMyProfile,
+    getMyAppointments,
+    getMySchedules,
     getAllDoctors,
     getDoctorById,
     updateDoctor,

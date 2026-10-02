@@ -46,6 +46,9 @@ const createDoctor = async (payload: ICreateDoctorPayload) => {
     })
 
 
+ 
+
+
     try {
         const result = await prisma.$transaction(async (tx) => {
             const doctorData = await tx.doctor.create({

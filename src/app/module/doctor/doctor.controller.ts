@@ -67,7 +67,32 @@ const deleteDoctor = catchAsync(
     }
 )
 
+
+const getMyProfile = catchAsync(async (req: Request, res: Response) => {
+    const userId = req.user?.userId as string;
+    const result = await DoctorService.getMyProfile(userId);
+    sendResponse(res, { httpStatusCode: status.OK, success: true, message: "Profile fetched successfully", data: result });
+});
+
+const getMyAppointments = catchAsync(async (req: Request, res: Response) => {
+    const userId = req.user?.userId as string;
+    const result = await DoctorService.getMyAppointments(userId);
+    sendResponse(res, { httpStatusCode: status.OK, success: true, message: "Appointments fetched successfully", data: result });
+});
+
+const getMySchedules = catchAsync(async (req: Request, res: Response) => {
+    const userId = req.user?.userId as string;
+    const result = await DoctorService.getMySchedules(userId);
+    sendResponse(res, { httpStatusCode: status.OK, success: true, message: "Schedules fetched successfully", data: result });
+});
+
+
+
+
 export const DoctorController = {
+    getMyProfile,
+    getMyAppointments,
+    getMySchedules,
     getAllDoctors,
     getDoctorById,
     updateDoctor,
